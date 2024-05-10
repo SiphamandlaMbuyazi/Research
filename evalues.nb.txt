@@ -1,0 +1,32 @@
+Clear["Global`*"]
+
+(* Define the functions *)
+g1[X_, Y1_, Y2_] := \[CapitalPi] - \[Mu]*X - (1/(X + Y1 + Y2))*\[Beta]1*c*X*Y1 - (1/(X + Y1 + Y2))*\[Beta]2*c*X*Y2;
+g2[X_, Y1_, Y2_] := (1/(X + Y1 + Y2))*\[Beta]1*c*X*Y1 - (\[Mu] + \[Gamma]1 + \[Tau])*Y1;
+g3[X_, Y1_, Y2_] := (1/(X + Y1 + Y2))*\[Beta]2*c*X*Y2 - (\[Mu] + \[Gamma]2 + \[Tau])*Y2;
+
+(* Define the critical points *)
+criticalPoints = {
+   {\[CapitalPi]/\[Mu], 0, 0},
+   {\[CapitalPi]/(\[Beta]1*c - \[Gamma]1 - \[Tau]), (\[CapitalPi]*(\[Beta]1*c - \[Gamma]1 - \[Mu] - \[Tau]))/((\[Gamma]1 + \[Mu] + \[Tau])*(\[Beta]1*c - \[Gamma]1 - \[Tau])), 0},
+   {\[CapitalPi]/(\[Beta]2*c - \[Gamma]2 - \[Tau]), 0, (\[CapitalPi]*(-\[Beta]2*c + \[Gamma]2 + \[Mu] + \[Tau]))/((\[Gamma]2 + \[Mu] + \[Tau])*(-\[Beta]2*c + \[Gamma]2 + \[Tau]))}
+};
+
+(* Define the Jacobian matrix *)
+jacobianMatrix = {
+   {D[g1[X, Y1, Y2], X], D[g1[X, Y1, Y2], Y1], D[g1[X, Y1, Y2], Y2]},
+   {D[g2[X, Y1, Y2], X], D[g2[X, Y1, Y2], Y1], D[g2[X, Y1, Y2], Y2]},
+   {D[g3[X, Y1, Y2], X], D[g3[X, Y1, Y2], Y1], D[g3[X, Y1, Y2], Y2]}
+};
+
+(* Evaluate Jacobian at critical points *)
+jacobians = jacobianMatrix /. {X -> #[[1]], Y1 -> #[[2]], Y2 -> #[[3]]} & /@ criticalPoints;
+
+(* Compute eigenvalues for each critical point *)
+eigenvalues = Eigenvalues /@ jacobians;
+
+(* Fully simplify the eigenvalues *)
+simplifiedEigenvalues = FullSimplify[eigenvalues];
+
+(* Output fully simplified eigenvalues for each critical point *)
+simplifiedEigenvalues
